@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  /* Surface */
+  --color-paper: #f4f3ef;
+  --color-phone: #ffffff;
+  --color-ink: #111111;
+  --color-ink-soft: #444444;
+  --color-rule: #e6e6e8;
+
+  /* Bubbles */
+  --color-bot-bg: #f1f1f3;
+  --color-me-bg: #1a73e8;
+  --color-me-fg: #ffffff;
+
+  /* Reassurance / next-step (peach) */
+  --color-peach-bg: #fff3ec;
+  --color-peach-border: #f0c8a8;
+  --color-peach-ink: #7a4a26;
+
+  /* Disclaim (warm cream) */
+  --color-cream-bg: #fff8eb;
+  --color-cream-border: #f0d9a0;
+  --color-cream-ink: #6a4a10;
+
+  /* Markey accent (used sparingly) */
+  --color-markey-1: #c1502e;
+  --color-markey-2: #d4663d;
+
+  /* Success */
+  --color-success: #2f7b48;
+}
+
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("https://fonts.gstatic.com/s/atkinsonhyperlegible/v11/9Bt23C1KxNDXMspQ1lPyU89-1h6ONRlW45GE5ZgpewSSbQ.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("https://fonts.gstatic.com/s/atkinsonhyperlegible/v11/9Bt43C1KxNDXMspQ1lPyU89-1h6ONRlW45G0gISDfHm5R3w.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: "Atkinson Hyperlegible", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Larger-text mode toggle (applied at <html> level) */
+html.text-larger {
+  font-size: 18px;
+}
+html.text-larger .bubble-body {
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+/* Typing dots animation */
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0.3; }
+  40% { opacity: 1; }
+}
+
+/* Dot grid background for the desktop "paper" outside the phone */
+.paper-dots {
+  background-image: radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* Phone frame shadow */
+.phone-shadow {
+  box-shadow: 3px 4px 0 0 rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.06);
+}
+
+/* Subtle pulse for the audio listening indicator */
+@keyframes mic-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.06); opacity: 0.85; }
+}
+.mic-listening {
+  animation: mic-pulse 1.1s ease-in-out infinite;
+}
