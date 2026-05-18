@@ -25,7 +25,7 @@ export const COPY = {
 
   chipPhoto: { en: "I have my result paper", es: "Tengo el papel del resultado" },
   chipDescribe: { en: "I'll describe my results", es: "Describiré mi resultado" },
-  chipAsk: { en: "Ask anything about HPV", es: "Preguntar sobre VPH" },
+  chipAsk: { en: "Ask anything about HPV or your results below", es: "Preguntar sobre VPH o sus resultados abajo" },
   chipHow: { en: "How do I schedule?", es: "¿Cómo agendo?" },
 
   // Suggested-questions row (shown beneath flow chips after outcome)
@@ -142,8 +142,8 @@ export const COPY = {
 
   // Scheduling sub-flow
   schedulingHow: {
-    en: "Call your clinic to set the appointment. I can give you a short script of what to say.",
-    es: "Llame a su clínica para agendar. Le doy un guión corto.",
+    en: "Call your clinic at **(859) 323-6542** to set the appointment. I can give you a short script of what to say.",
+    es: "Llame a su clínica al **(859) 323-6542** para agendar. Le doy un guión corto.",
   },
   callingClinic: {
     en: "(simulated) Calling Polk-Dalton Clinic…",
