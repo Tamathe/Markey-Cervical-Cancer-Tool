@@ -7,6 +7,36 @@ export const runtime = "nodejs";
 
 const MODEL = process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-5-20250929";
 
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 20;
+const ipHits = new Map<string, number[]>();
+
+function getClientIp(req: Request): string {
+  const fwd = req.headers.get("x-forwarded-for");
+  if (fwd) return fwd.split(",")[0].trim();
+  return req.headers.get("x-real-ip") ?? "unknown";
+}
+
+function checkRateLimit(ip: string): { ok: true } | { ok: false; retryAfter: number } {
+  const now = Date.now();
+  const cutoff = now - RATE_LIMIT_WINDOW_MS;
+  const hits = (ipHits.get(ip) ?? []).filter((t) => t > cutoff);
+  if (hits.length >= RATE_LIMIT_MAX) {
+    const retryAfter = Math.max(1, Math.ceil((hits[0] + RATE_LIMIT_WINDOW_MS - now) / 1000));
+    return { ok: false, retryAfter };
+  }
+  hits.push(now);
+  ipHits.set(ip, hits);
+  if (ipHits.size > 5000) {
+    for (const [k, v] of ipHits) {
+      const fresh = v.filter((t) => t > cutoff);
+      if (fresh.length === 0) ipHits.delete(k);
+      else ipHits.set(k, fresh);
+    }
+  }
+  return { ok: true };
+}
+
 const SYSTEM_INSTRUCTIONS = `You are the **Markey HPV Helper**, a patient-facing assistant for the University of Kentucky Markey Cancer Center. You explain HPV and Pap test results to patients in plain, calm language.
 
 WHO YOU ARE TALKING TO:
@@ -86,6 +116,14 @@ export async function POST(req: Request): Promise<Response> {
           "ANTHROPIC_API_KEY is missing or looks like a placeholder. Set a real key in .env.local and restart the dev server.",
       },
       { status: 500 },
+    );
+  }
+
+  const rl = checkRateLimit(getClientIp(req));
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: `Too many requests. Try again in ${rl.retryAfter}s.` },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfter) } },
     );
   }
 
